@@ -196,8 +196,8 @@ class Contact:
             submit_button = st.form_submit_button(label="Submit")
 
         # Define email sender and receiver
-        sender_email = "gamerdexter974@gmail.com"
-        receiver_email = "deepakvishak24@gmail.com"
+        sender_email = "minico5518@ekposta.com"
+        receiver_email = "ashiashik5047@gmail.com"
 
         # Define email message
         email_subject = subject
@@ -214,7 +214,8 @@ class Contact:
                 with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
                     smtp.starttls()
                     # Replace "your_app_password" with your actual app-specific password
-                    smtp.login(sender_email, "lrglxvsyxtrvcmjz")
+                    # smtp.login(sender_email, "zfuoayducetcqbd")
+                    smtp.login(sender_email,"KEg-%#F%fn<Efqs%u{dWX)Y&*^&|NaWOliKx1F^$aR+17V#u%?")
                     smtp.sendmail(sender_email, receiver_email, msg.as_string())
                     st.success('Your message has been sent!')
             except smtplib.SMTPAuthenticationError as e:
@@ -239,7 +240,7 @@ class Footer:
             img_bytes_f2 = f2.read()
             data_url_f2 = base64.b64encode(img_bytes_f2).decode("utf-8")
 
-        with open("web.png", "rb") as f3:
+        with open("hackerrank.png", "rb") as f3:
             img_bytes_f3 = f3.read()
             data_url_f3 = base64.b64encode(img_bytes_f3).decode("utf-8")
 
@@ -288,11 +289,11 @@ class Footer:
         </style>
         <div class="footer">
             <div class="icon-grid">
-                <a href="https://github.com/DeepakVishak"><img src="data:image/png;base64,{data_url_f1}" class="icon" alt="github"></a>
-                <a href="https://www.linkedin.com/in/deepak-vishak-0417b9201/"><img src="data:image/png;base64,{data_url_f2}" class="icon" alt="linkedin"></a>
-                <a href="https://deepakvishak.github.io/"><img src="data:image/png;base64,{data_url_f3}" class="icon" alt="web"></a>
+                <a href="https://github.com/SDE-Ashik"><img src="data:image/png;base64,{data_url_f1}" class="icon" alt="github"></a>
+                <a href="https://www.linkedin.com/in/muhammed-ashik-s/"><img src="data:image/png;base64,{data_url_f2}" class="icon" alt="linkedin"></a>
+                <a href="https://www.hackerrank.com/profile/ashiashik5047"><img src="data:image/png;base64,{data_url_f3}" class="icon" alt="web"></a>
             </div>
-            <p>&copy; 2023 All Rights Reserved</p>
+            <p>&copy; 2024 All Rights Reserved</p>
         </div>
         """
 
