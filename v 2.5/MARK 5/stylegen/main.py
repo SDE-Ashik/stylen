@@ -6,7 +6,8 @@ import json
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.applications import vgg19
+from keras.applications import vgg19
+# from tensorflow.keras.applications import vgg19
 import base64
 from PIL import Image
 import plotly.graph_objects as go
