@@ -7,25 +7,25 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from keras.applications import vgg19
-# from tensorflow.keras.applications import vgg19
-import base64
-from PIL import Image
+import requests
 import plotly.graph_objects as go
-import openai
-from craiyon import Craiyon, craiyon_utils
+
 from PIL import Image
 from io import BytesIO
+from dotenv import load_dotenv
+
+load_dotenv()
+api_key = os.getenv('API_KEY')
 
 
 class Output:
 
-    def __init__(self,img,epch,lsd):
-        self.image =  img
+    def __init__(self, img, epch, lsd):
+        self.image = img
         self.e = epch
         self.l = lsd
 
     def output_display(self):
-
         st.balloons()
         st.write("""""")
         st.write("""""")
@@ -56,9 +56,9 @@ class Output:
         st.image(self.image, caption="Output Image")
         button = st.download_button(
             label="Download image",
-            data= open("output.png", "rb").read(),
+            data=open("output.png", "rb").read(),
             file_name="output_image.jpg",
-            mime = "image/png"
+            mime="image/png"
         )
 
         # Define the data
@@ -79,7 +79,6 @@ class Output:
         st.plotly_chart(fig)
 
 
-
 class json_file:
 
     def __init__(self):
@@ -89,11 +88,14 @@ class json_file:
         with open(filepath, "r") as f:
             return json.load(f)
 
+
 class Load(json_file):
 
     def __init__(self):
         #self.progress = st.progress(0)
+        super().__init__()
         self.progress = None
+
     def load_display(self):
         st.write("""""")
         st.write("""""")
@@ -112,7 +114,7 @@ class Load(json_file):
             width=None,
             key=None,
         )
-        self.progress = st.progress(0,text="Loading model... Please wait... Takes time...")
+        self.progress = st.progress(0, text="Loading model... Please wait... Takes time...")
         """
         progress_label = "Loading model..."
         for i in range(100):
@@ -120,11 +122,13 @@ class Load(json_file):
             progress_text = f"{progress_label} {i+1}/100"
             self.progress.progress(i + 1,text=progress_text)
         """
+
+
 class Core(Load):
 
-    def __init__(self,img_path,style_path,epch):
+    def __init__(self, img_path, style_path, epch):
 
-        self.loss_data=[]
+        self.loss_data = []
         self.param = []
 
         Load.__init__(self)
@@ -170,7 +174,7 @@ class Core(Load):
         # The layer to use for the content loss.
         self.content_layer_name = "block5_conv2"
 
-    def preprocess_image(self,image_path):
+    def preprocess_image(self, image_path):
         # Util function to open, resize and format
         # pictures into appropriate tensors
         img = keras.preprocessing.image.load_img(
@@ -181,7 +185,7 @@ class Core(Load):
         img = vgg19.preprocess_input(img)
         return tf.convert_to_tensor(img)
 
-    def deprocess_image(self,x):
+    def deprocess_image(self, x):
         # Util function to convert a tensor into a valid image
         x = x.reshape((self.img_nrows, self.img_ncols, 3))
         # Remove zero-center by mean pixel
@@ -194,7 +198,7 @@ class Core(Load):
         return x
 
     # The gram matrix of an image tensor (feature-wise outer product)
-    def gram_matrix(self,x):
+    def gram_matrix(self, x):
         x = tf.transpose(x, (2, 0, 1))
         features = tf.reshape(x, (tf.shape(x)[0], -1))
         gram = tf.matmul(features, tf.transpose(features))
@@ -220,7 +224,7 @@ class Core(Load):
 
     # The 3rd loss function, total variation loss,
     # designed to keep the generated image locally coherent
-    def total_variation_loss(self,x):
+    def total_variation_loss(self, x):
         a = tf.square(
             x[:, : self.img_nrows - 1, : self.img_ncols - 1, :] \
             - x[:, 1:, : self.img_ncols - 1, :]
@@ -261,33 +265,34 @@ class Core(Load):
         return loss
 
     @tf.function
-    def compute_loss_and_grads(self,combination_image,base_image, style_reference_image):
+    def compute_loss_and_grads(self, combination_image, base_image, style_reference_image):
         with tf.GradientTape() as tape:
-            loss = self.compute_loss(combination_image,base_image, style_reference_image)
+            loss = self.compute_loss(combination_image, base_image, style_reference_image)
         grads = tape.gradient(loss, combination_image)
         return loss, grads
 
     def image_style_processing(self):
 
+        global img
         self.load_display()
         progress_label = "Image Processing..."
         optimizer = keras.optimizers.SGD(
             keras.optimizers.schedules.ExponentialDecay(
-            initial_learning_rate=100.0, decay_steps=100, decay_rate=0.96
+                initial_learning_rate=100.0, decay_steps=100, decay_rate=0.96
             )
         )
 
         base_image = self.preprocess_image(self.base_image_path)
         style_reference_image = self.preprocess_image(self.style_reference_image_path)
         combination_image = tf.Variable(self.preprocess_image(self.base_image_path))
-        for i in range(1,self.epoch+ 1):
+        for i in range(1, self.epoch + 1):
             loss, grads = self.compute_loss_and_grads(
                 combination_image, base_image, style_reference_image
             )
             optimizer.apply_gradients([(grads, combination_image)])
-            if(i%100 == 0):
+            if (i % 100 == 0):
                 self.loss_data.append(loss)
-            progress_scale = i/self.epoch
+            progress_scale = i / self.epoch
             img = self.deprocess_image(combination_image.numpy())
             #fname = self.result_prefix + "_at_iteration_%d.png" % i
             #keras.preprocessing.image.save_img(fname, img)
@@ -306,12 +311,10 @@ class Core(Load):
                 count+=1
                 #print(partition,count,partition*count)
             """
-        
 
-        out = Output(img,self.epoch,self.loss_data)
+        out = Output(img, self.epoch, self.loss_data)
         st.session_state.current_page = out
         out.output_display()
-
 
 
 class Main:
@@ -325,7 +328,7 @@ class Main:
         self.generate_style = None
         self.epoch = 200
         self.params = []
-        self.generator = Craiyon()
+        # self.generator = Craiyon()
         self.A = None
         self.B = None
         self.C = None
@@ -368,41 +371,89 @@ class Main:
         p = self.main_parameters_return()
         c = Core(p[0], p[1], p[2])
         c.image_style_processing()
-    
-    def generation_from_text(self,txt,filename):
-        result = self.generator.generate(txt)
-        images = craiyon_utils.encode_base64(result.images)
-        for i in images:
-            image = Image.open(BytesIO(base64.decodebytes(i)))
+
+    # def generation_from_text(self, txt, filename):
+    #     result = self.generator.generate(txt)
+    #     images = craiyon_utils.encode_base64(result.images)
+    #     for i in images:
+    #         image = Image.open(BytesIO(base64.decodebytes(i)))
+    #         resized_image = image.resize((512, 512))
+    #         image_path = filename + ".jpg"
+    #         resized_image.save(image_path)
+
+    def generation_content_from_text(self,txt, filename):
+
+        # Make the API request with the API key
+        r = requests.post('https://clipdrop-api.co/text-to-image/v1',
+                          files={
+                              'prompt': (None, txt, 'text/plain')
+                          },
+                          headers={'x-api-key': api_key}
+                          )
+
+        # Check if the request was successful
+        if r.ok:
+            # Convert the response content to a PIL Image
+            image_data = BytesIO(r.content)
+            image = Image.open(image_data)
+
+            # Resize the image to 512x512 pixels
             resized_image = image.resize((512, 512))
-            image_path = filename+".jpg" 
-            resized_image.save(image_path)
-    
+
+            # Save the resized image to the specified filename
+            resized_image.save(filename + '.jpg')
+        else:
+            raise Exception(f'Error generating image: {r.json().get("error", "Unknown error")}')
+    # style image generation function
+    def generation_style_from_text(self,txt, filename):
+
+        # Make the API request with the API key
+        r = requests.post('https://clipdrop-api.co/text-to-image/v1',
+                          files={
+                              'prompt': (None, txt, 'text/plain')
+                          },
+                          headers={'x-api-key': api_key}
+                          )
+
+        # Check if the request was successful
+        if r.ok:
+            # Convert the response content to a PIL Image
+            image_data = BytesIO(r.content)
+            image = Image.open(image_data)
+
+            # Resize the image to 512x512 pixels
+            resized_image = image.resize((512, 512))
+
+            # Save the resized image to the specified filename
+            resized_image.save(filename + '.jpg')
+        else:
+            raise Exception(f'Error generating image: {r.json().get("error", "Unknown error")}')
+
+
     def callback(self):
-            st.session_state.button_clicked = True
+        st.session_state.button_clicked = True
 
     def main_display(self):
 
         st.title("🖌️ StyleGen")
         st.subheader("Image Style Transfer using VGG-19")
-        self.photo_upload = st.file_uploader(label="Photo Upload", type=['jpeg', 'jpg', 'png'], accept_multiple_files=False,
-                                            key="photo_upload")
-        self.style_upload = st.file_uploader(label="Style Upload", type=['jpeg', 'jpg', 'png'], accept_multiple_files=False,
-                                            key="style_upload")
+        self.photo_upload = st.file_uploader(label="Photo Upload", type=['jpeg', 'jpg', 'png'],
+                                             accept_multiple_files=False,
+                                             key="photo_upload")
+        self.style_upload = st.file_uploader(label="Style Upload", type=['jpeg', 'jpg', 'png'],
+                                             accept_multiple_files=False,
+                                             key="style_upload")
 
         self.generate_photo_input = st.text_input("Generate Image with Text")
         self.generate_style_input = st.text_input("Generate Style Image with Text")
 
-
         self.epoch = st.slider(label="Number of Epochs", min_value=200, max_value=4000, step=100, format="%d",
-                            key="epoch")
+                               key="epoch")
 
-        
         if "button_clicked" not in st.session_state:
             st.session_state.button_clicked = False
-        
 
-        if (st.button("SUBMIT", on_click = self.callback) or st.session_state.button_clicked):
+        if (st.button("SUBMIT", on_click=self.callback) or st.session_state.button_clicked):
             self.A_comp = self.photo_upload is None
             self.B_comp = self.style_upload is None
             self.C_comp = self.generate_photo_input == ''
@@ -417,22 +468,22 @@ class Main:
                 self.A = self.photo_upload.type == "image/jpeg" or self.photo_upload.type == "image/jpg" or self.photo_upload.type == "image/png"
             if self.B_comp is False:
                 self.B = self.style_upload.type == "image/jpeg" or self.style_upload.type == "image/jpg" or self.style_upload.type == "image/png"
-                
+
             self.C = self.generate_photo_input != ''
             self.D = self.generate_style_input != ''
 
+            y = (self.A or self.C) and (self.B or self.D) and (self.B_comp or self.D_comp) and (
+                    self.A_comp or self.C_comp)
 
-            y = (self.A or self.C) and (self.B or self.D) and (self.B_comp or self.D_comp) and (self.A_comp or self.C_comp)
-
-            print(self.A,self.B,self.C,self.D)
-            print(self.A_comp,self.B_comp,self.C_comp,self.D_comp)
+            print(self.A, self.B, self.C, self.D)
+            print(self.A_comp, self.B_comp, self.C_comp, self.D_comp)
             print(y)
             if y:
                 if self.C:
-                    self.generation_from_text(self.generate_photo_input, 'generated_photo')
+                    self.generation_content_from_text(self.generate_photo_input, 'generated_photo')
                 if self.D:
-                    self.generation_from_text(self.generate_style_input, 'generated_style')
-                
+                    self.generation_style_from_text(self.generate_style_input, 'generated_style')
+
                 st.title("🖼️ Given Input:")
                 col1, col2 = st.columns(2)
 
@@ -445,7 +496,7 @@ class Main:
                     with col2:
                         st.image(self.style_upload, use_column_width=True)
                         st.caption("Style Reference")
-                
+
                 if self.C:
                     with col1:
                         st.image("generated_photo.jpg", use_column_width=True)
@@ -455,26 +506,9 @@ class Main:
                     with col2:
                         st.image("generated_style.jpg", use_column_width=True)
                         st.caption("Generated Style Reference")
-                
-                    
+
                 if st.button("Confirm"):
                     self.call_core()
 
             else:
                 st.error("Invalid input Combination!!! Enter either text or upload not both or upload required inputs")
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
