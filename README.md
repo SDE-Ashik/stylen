@@ -1,119 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Style Transfer with Streamlit</title>
-    <style>
-        body {
-          background-color: black;
-          color: white;
-          font-family: Arial, sans-serif;
-          padding: 20px;
-        }
-        h1, h2, h3, h4, h5, h6 {
-          color: white;
-        }
-        img {
-          display: block;
-          margin: 0 auto;
-        }
-        pre {
-          background-color: #333;
-          color: white;
-          padding: 10px;
-          border-radius: 5px;
-          overflow-x: auto;
-        }
-        code {
-          color: white;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Style Transfer with Streamlit</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      color: white;
+    }
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+    pre {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    code {
+      color: white;
+    }
+  </style>
 </head>
 <body>
-<h1 style="text-align: center;">Image Style Transfer with Streamlit</h1>
+  <h1>Image Style Transfer with Streamlit</h1>
 
-<p style="text-align: center;">
-    <img src="MARK 5/1.png" alt="Image Style Transfer Banner" width="600">
-</p>
+  <img src="MARK 5/1.png" alt="Image Style Transfer Banner" width="600">
 
-<h2>Overview</h2>
+  <h2>Overview</h2>
 
-<p>The Image Style Transfer application is an interactive tool that allows users to transfer the style of one image onto
-    another using the VGG-19 model. Users can upload images, provide text prompts, and generate stunning artistic
-    creations effortlessly.</p>
+  <p>The Image Style Transfer application is an interactive tool that allows users to transfer the style of one image onto another using the VGG-19 model. Users can upload images, provide text prompts, and generate stunning artistic creations effortlessly.</p>
 
-<h2>Key Features</h2>
+  <h2>Key Features</h2>
 
-<ul>
+  <ul>
     <li><strong>Upload Images:</strong> Easily upload your content and style images for style transfer.</li>
     <li><strong>Text-to-Image:</strong> Generate images from text prompts using the integrated ClipDrop API.</li>
     <li><strong>VGG-19 Model:</strong> Leverage the power of the VGG-19 model for high-quality style transfer.</li>
     <li><strong>Streamlit Interface:</strong> Enjoy a simple and intuitive user interface powered by Streamlit.</li>
     <li><strong>Customization:</strong> Fine-tune style transfer parameters such as epochs and image dimensions.</li>
-</ul>
+  </ul>
 
-<h2>Installation</h2>
+  <h2>Installation</h2>
 
-<ol>
+  <ol>
     <li><strong>Clone Repository:</strong></li>
     <pre><code>git clone https://github.com/SDE-Ashik/stylen.git</code></pre>
     <li><strong>Install Dependencies:</strong></li>
     <pre><code>pip install -r requirements.txt</code></pre>
     <li><strong>Set API Key:</strong></li>
     <ul>
-        <li>Obtain an API key from ClipDrop and replace 'your_api_key_here' in the code with your actual API key.</li>
+      <li>Obtain an API key from ClipDrop and replace 'your_api_key_here' in the code with your actual API key.</li>
     </ul>
     <li><strong>Configure .env File:</strong></li>
     <ul>
-        <li>Create a .env file in the root directory of the project.</li>
-        <li>Add your API key to the .env file using the following format:</li>
-        <pre><code>API_KEY=your_api_key_here</code></pre>
+      <li>Create a .env file in the root directory of the project.</li>
+      <li>Add your API key to the .env file using the following format:</li>
+      <pre><code>API_KEY=your_api_key_here</code></pre>
     </ul>
-</ol>
+  </ol>
 
-<h2>Usage</h2>
+  <h2>Usage</h2>
 
-<ol>
+  <ol>
     <li><strong>Run Streamlit App:</strong></li>
-    <pre><code> streamlit run main_program.py
-</code></pre>
+    <pre><code>streamlit run main_program.py</code></pre>
     <li><strong>Access App:</strong></li>
     <ul>
-        <li>Open the provided URL in your web browser to access the application.</li>
+      <li>Open the provided URL in your web browser to access the application.</li>
     </ul>
     <li><strong>Generate Images:</strong></li>
     <ul>
-        <li>Upload images or provide text prompts to initiate style transfer and generate images.</li>
+      <li>Upload images or provide text prompts to initiate style transfer and generate images.</li>
     </ul>
-</ol>
+  </ol>
 
-<h2>Screenshots</h2>
+  <h2>Screenshots</h2>
 
-<p style="text-align: center;">
+  <p style="text-align: center;">
     <img src="MARK 5/3.png" alt="Uploaded Photos" width="800">
-</p>
+  </p>
 
-<p style="text-align: center;">
+  <p style="text-align: center;">
     <img src="MARK 5/8.png" alt="Text Prompts" width="800">
-</p>
-<p style="text-align: center;">
-    <img src="MARK 5/5.png" alt="Text Prompts" width="800">
-</p>
-<p style="text-align: center;">
-    <img src="MARK 5/6.png" alt="Text Prompts" width="800">
-</p>
-<p style="text-align: center;">
-    <img src="MARK 5/7.png" alt="Text Prompts" width="800">
-</p>
+  </p>
+  <!-- Add more screenshots here -->
 
-<h2>Contributing</h2>
+  <h2>Contributing</h2>
 
-<p>Contributions to improve the project are welcome. Please fork the repository and submit pull requests with your
-    changes.</p>
+  <p>Contributions to improve the project are welcome. Please fork the repository and submit pull requests with your changes.</p>
 
-<h2>License</h2>
+  <h2>License</h2>
 
-<p>This project is licensed under the <a href="LICENSE">MIT License</a>.</p>
+  <p>This project is licensed under the <a href="LICENSE">MIT License</a>.</p>
 </body>
 </html>
