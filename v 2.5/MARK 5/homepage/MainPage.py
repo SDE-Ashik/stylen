@@ -7,6 +7,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import base64
 
+
 class json_file:
 
     def __init__(self):
@@ -48,15 +49,14 @@ class Home(json_file):
             )
 
         st.write(
-        """<style>
+            """<style>
         [data-testid="stHorizontalBlock"] {
             align-items: center;
         }
         </style>
         """,
-        unsafe_allow_html=True
+            unsafe_allow_html=True
         )
-
 
 
 class WhatWeDo(json_file):
@@ -93,13 +93,13 @@ class WhatWeDo(json_file):
             )
 
         st.write(
-        """<style>
+            """<style>
         [data-testid="stHorizontalBlock"] {
             align-items: center;
         }
         </style>
         """,
-        unsafe_allow_html=True
+            unsafe_allow_html=True
         )
         st.markdown(
             "<p style='text-align: center; font-size: 15pt; font-style: italic;'>\"StyleGen is an appliction in which you can apply the style of one image to another image while preserving its content.\"</p>",
@@ -114,8 +114,6 @@ class HowToUse:
         pass
 
     def howtouse_display(self):
-
-        
         #st.set_page_config(layout="wide")
         st.write("""""")
         st.write("""""")
@@ -140,22 +138,26 @@ class HowToUse:
 
         # step 4
 
-        st.markdown("4. Choose the number of epochs to scale the model. More epochs mean better results but longer processing time.")
+        st.markdown(
+            "4. Choose the number of epochs to scale the model. More epochs mean better results but longer processing time.")
         st.image("4.png", width=1000)
 
         # step 5
 
-        st.markdown("5. The inputs are fed into the VGG-19 model for processing. This may take some time, so please be patient.")
+        st.markdown(
+            "5. The inputs are fed into the VGG-19 model for processing. This may take some time, so please be patient.")
         st.image("5.png", width=1000)
 
         # step 6
 
-        st.markdown("6. Once the processing is complete, the output image will be displayed on the app. You can download it using the **Download** button below.")
+        st.markdown(
+            "6. Once the processing is complete, the output image will be displayed on the app. You can download it using the **Download** button below.")
         st.image("6.png", width=1000)
 
         # step 7
 
-        st.markdown("7. You can check the performance of the model using **Graph Analysis** section below. Which shows total loss graph corresponds to number of epochs.")
+        st.markdown(
+            "7. You can check the performance of the model using **Graph Analysis** section below. Which shows total loss graph corresponds to number of epochs.")
         st.image("7.png", width=1000)
 
 
@@ -163,7 +165,6 @@ class Contact:
 
     def __init__(self):
         pass
-
 
     def contact_display(self):
 
@@ -196,7 +197,7 @@ class Contact:
             submit_button = st.form_submit_button(label="Submit")
 
         # Define email sender and receiver
-        sender_email = "minico5518@ekposta.com"
+        sender_email = "akhilaanilkumar104@gmail.com"
         receiver_email = "ashiashik5047@gmail.com"
 
         # Define email message
@@ -215,7 +216,7 @@ class Contact:
                     smtp.starttls()
                     # Replace "your_app_password" with your actual app-specific password
                     # smtp.login(sender_email, "zfuoayducetcqbd")
-                    smtp.login(sender_email,"KEg-%#F%fn<Efqs%u{dWX)Y&*^&|NaWOliKx1F^$aR+17V#u%?")
+                    smtp.login(sender_email, "B1B59433282F3D94B97502CB2CBA516EC728")
                     smtp.sendmail(sender_email, receiver_email, msg.as_string())
                     st.success('Your message has been sent!')
             except smtplib.SMTPAuthenticationError as e:
@@ -224,13 +225,88 @@ class Contact:
         # Add footer
         st.write("Thank you for contacting us. We'll be in touch soon!")
 
+
+# class Footer:
+#
+#     def __init__(self):
+#         pass
+#
+#     def footer_display(self):
+#         # Read the icon image file
+#         with open("github.png", "rb") as f1:
+#             img_bytes_f1 = f1.read()
+#             data_url_f1 = base64.b64encode(img_bytes_f1).decode("utf-8")
+#
+#         with open("linkedin.png", "rb") as f2:
+#             img_bytes_f2 = f2.read()
+#             data_url_f2 = base64.b64encode(img_bytes_f2).decode("utf-8")
+#
+#         with open("hackerrank.png", "rb") as f3:
+#             img_bytes_f3 = f3.read()
+#             data_url_f3 = base64.b64encode(img_bytes_f3).decode("utf-8")
+#
+#         # Define the HTML and CSS for the footer
+#         footer_html = f"""
+#         <style>
+#         .footer {{
+#             box-sizing: border-box;
+#             display: flex;
+#             flex-direction: column;
+#             align-items: center;
+#             justify-content: center;
+#             margin-top: 30px;
+#             padding: 20px;
+#             color: #6C757D;
+#             font-size: 14px;
+#             font-weight: 500;
+#             text-align: center;
+#         }}
+#
+#         .footer a {{
+#             color: #6C757D;
+#             text-decoration: none;
+#             margin-left: 20px;
+#             margin-right: 20px;
+#         }}
+#
+#         .footer a:hover {{
+#             color: #0366d6;
+#         }}
+#
+#         .footer .icon-grid {{
+#             display: grid;
+#             grid-template-columns: repeat(3, 1fr);
+#             grid-gap: 20px;
+#         }}
+#
+#         .footer .icon {{
+#             height: 48px;
+#             width: 48px;
+#         }}
+#
+#         .footer p {{
+#             margin-top: 20px;
+#         }}
+#         </style>
+#         <div class="footer">
+#             <div class="icon-grid">
+#                 <a href="https://github.com/SDE-Ashik"><img src="data:image/png;base64,{data_url_f1}" class="icon" alt="github"></a>
+#                 <a href="https://www.linkedin.com/in/muhammed-ashik-s/"><img src="data:image/png;base64,{data_url_f2}" class="icon" alt="linkedin"></a>
+#                 <a href="https://www.hackerrank.com/profile/ashiashik5047"><img src="data:image/png;base64,{data_url_f3}" class="icon" alt="web"></a>
+#             </div>
+#             <p>&copy; 2024 All Rights Reserved</p>
+#         </div>
+#         """
+#
+#         # Add the footer to the app
+#
+#         st.markdown(footer_html, unsafe_allow_html=True)
 class Footer:
 
     def __init__(self):
         pass
 
     def footer_display(self):
-
         # Read the icon image file
         with open("github.png", "rb") as f1:
             img_bytes_f1 = f1.read()
@@ -298,10 +374,4 @@ class Footer:
         """
 
         # Add the footer to the app
-
         st.markdown(footer_html, unsafe_allow_html=True)
-
-
-
-
-
